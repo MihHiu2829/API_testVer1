@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/blue"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <ImageView
+        android:layout_width="200dp"
+        android:src="@drawable/db_flash"
+        android:layout_marginTop="120dp"
+        android:layout_gravity="center"
+        android:layout_height="200dp"/>
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:id="@+id/edt_un"
+        android:background="@drawable/broder_corner3dp"
+        android:layout_marginHorizontal="40dp"
+        android:hint="Enter username"
+        android:padding="15dp"
+        android:inputType="text"
+        android:layout_height="50dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:id="@+id/edt_pw"
+        android:background="@drawable/broder_corner3dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="40dp"
+        android:hint="Enter password"
+        android:padding="15dp"
+        android:inputType="textPassword"
+        android:layout_height="50dp"/>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:text="login"
+        android:id="@+id/bt_login"
+        android:paddingHorizontal="30dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="40dp"
+        android:backgroundTint="@color/blue02"
+        android:layout_height="wrap_content"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="Forgot password?"
+        android:textColor="@color/white"
+        android:textSize="16dp"
+        android:layout_gravity="end"
+        android:layout_marginEnd="40dp"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
