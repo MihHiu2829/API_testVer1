@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.example.api_ver3.ViewModel.CommonVM;
+import com.example.api_ver3.ViewModel.baseViewModel;
 import com.example.api_ver3.databinding.M000FlashBinding;
 
 public class m000_flash extends base_FRG<M000FlashBinding, CommonVM> {

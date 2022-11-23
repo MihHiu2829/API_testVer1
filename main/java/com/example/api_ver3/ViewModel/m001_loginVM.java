@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.example.api_ver3.API.API;
 import com.example.api_ver3.API.req.AccountReq;
+import com.example.api_ver3.API.req.RequesTokenReq;
 import com.example.api_ver3.API.res.AuthenRes;
 import com.example.api_ver3.R;
 
@@ -23,19 +24,16 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class m001_loginVM extends baseViewModel{
-    private static final String BASE_URL = "https://api.themoviedb.org/3/" ;
     private static final String TAG = m001_loginVM.class.getName() ;
-    public String password ;
-    public String username ;
+    private static final String KEY_API_AUTHEN = "KEY_API_AUTHEN";
+    private static final String KEY_API_CREATE_SESSION = "KEY_API_CREATE_SESSION";
+    public static final String KEY_API_CREATE_SESSION_ID = "KEY_API_CREATE_SESSION_ID";
 
+    private String userName, password ;
+    public void getAutehn(String un, String pw) {
+        this.userName = un ;
+        this.password = pw ;
 
-    public void getAutehn(String un, String pw)
-    {
-        password = pw ;
-        username = un ;
-        Retrofit rs = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create())
-                .client(new OkHttpClient.Builder().callTimeout(30, TimeUnit.SECONDS).build()).build();
-         API api = rs.create(API.class) ;
 //        api.getAuthen().enqueue(new Callback<AuthenRes>() {
 //            @Override
 //            public void onResponse(@Nullable Call<AuthenRes> call, @Nullable Response<AuthenRes> response) {
@@ -56,52 +54,32 @@ public class m001_loginVM extends baseViewModel{
 //
 //            }
 //        });
-        api.getAuthen().enqueue(new Callback<AuthenRes>() {
-            @Override
-            public void onResponse(@Nullable  Call<AuthenRes> call,@Nullable Response<AuthenRes> response) {
-                        if(response.code() == 200 || response.code() == 201)
-                                handleSuccess(response.body());
-                        else handleFail(response);
-            }
-
-            @Override
-            public void onFailure(@Nullable Call<AuthenRes> call, @Nullable Throwable t) {
-                Log.e(TAG,"onFailure: "+ t.getMessage()) ;
-            }
-        });
+        getAPI().getAuthen().enqueue(initHandleResponse(KEY_API_AUTHEN));
     }
 
-    private void handleFail(Response<AuthenRes> response) {
-        Log.e(TAG, "handleFail:  "+ response.code()) ;
 
+
+
+    private void createSession(String requestToken) {
+        getAPI().createSession(new AccountReq(userName,password,requestToken)).enqueue(initHandleResponse(KEY_API_CREATE_SESSION));
+    }
+    private void createSessionID(String requestToken) {
+        getAPI().createSessionID(new RequesTokenReq(requestToken)).enqueue(initHandleResponse(KEY_API_CREATE_SESSION_ID));
     }
 
-    private void handleSuccess(AuthenRes body) {
+    @Override
+    protected void handleSuccess(String key, Object body) {
         Log.e(TAG, "handleSuccess:  "+ body) ;
-        createSession(body.requestToken,username,password);
-    }
+        if(key.equals(KEY_API_AUTHEN))
+        {
+            createSession(((AuthenRes)body).requestToken);
 
-    private void createSession(String requestToken, String username, String password)
-    {
-        Retrofit rs = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create())
-                .client(new OkHttpClient.Builder().callTimeout(30, TimeUnit.SECONDS).build()).build();
-        API api = rs.create(API.class) ;
-        api.createSession(new AccountReq(username,password,requestToken)).enqueue(new Callback<AuthenRes>() {
-            @Override
-            public void onResponse(@Nullable Call<AuthenRes> call, @Nullable Response<AuthenRes> response) {
-
-                if(response.code() == 200 || response.code() == 201)
-                {
-                    handleSuccess(response.body());
-                }els    e{
-
-                    handleFail(response);
-                }
-            }
-            @Override
-            public void onFailure(@Nullable Call<AuthenRes> call,@Nullable Throwable t) {
-                Log.e(TAG, "onFailure :  "+ t.getMessage()) ;
-            }
-        });
+        }else if (key.equals(KEY_API_CREATE_SESSION))
+        {
+            createSessionID(((AuthenRes)body).requestToken);
+        }else if(key.equals(KEY_API_CREATE_SESSION_ID))
+        {
+            callBack.apiSuccess(key,body);
+        }
     }
 }
